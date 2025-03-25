@@ -51,7 +51,7 @@ export default function Navbar() {
               <NavLink className={` text-indigo-50 text-xl lg:text-indigo-300 lg:hover:text-indigo-50`}>Logout</NavLink>
             </li>
           </ul> :
-          <ul className={`flex flex-col lg:flex-row justify-evenly space-x-3 lg:space-x-5 pr-2 lg:pr-0 h-${isToggleShown ? '20' : '0'} lg:h-auto`}>
+          <ul className={`flex flex-col lg:flex-row justify-evenly space-x-3 lg:space-x-5 pr-2 lg:pr-0 ${isToggleShown ? 'h-24' : 'h-0'} lg:h-auto`}>
 
             <li>
               <NavLink to={'/log-in'} className={`ps-6 lg:ps-0 text-indigo-50 text-xl ${location.pathname === '/log-in' ? 'lg:text-indigo-50' : 'lg:text-indigo-300 hover:lg:text-indigo-50'}`}>Log In</NavLink>
