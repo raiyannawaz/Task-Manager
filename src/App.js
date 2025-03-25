@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './Components/Navbar'
 import Login from './Pages/Login'
 import Dashboard from './Pages/Dashboard';
