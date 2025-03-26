@@ -8,3 +8,7 @@
 
 2. Run the development server:
    npm start
+
+Impletmented Tech Stacks 
+
+React JS with Formik, Yup along TailwindCSS and MUI

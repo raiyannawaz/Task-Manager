@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import Context from '../ContextAPI/Context'
 import { FilterAlt } from '@mui/icons-material'
 import Card from '../Components/Card'
-import { fetchData } from '../Utils/BaseUrl'
 import TaskAction from '../Components/TaskAction'
 
 export default function Dashboard() {
@@ -29,17 +28,12 @@ export default function Dashboard() {
     let { name, value } = event.target
     const newObj = { ...selectFilter, [name]: value };
 
-    const newFilteredTasks = tasks.filter(task=>{
-      for(let key in newObj){
-        if(newObj[key] && newObj[key] === task[key]){
-          return true
-        }
-      }
-      return false
+    let newTasks = tasks.filter(task=>{
+      return Object.keys(newObj).every(key => task[key]===newObj[key])
     })
-    
-    setSelectFilter({...newObj, [name]: value })
-    setFilteredTasks(newFilteredTasks)
+
+    setSelectFilter({ ...selectFilter, [name]: value })
+    setFilteredTasks(newTasks)
 
   }
 
@@ -59,12 +53,12 @@ export default function Dashboard() {
         <div className="flex flex-col space-y-3 lg:space-y-0 lg:flex-row justify-between items-center pt-7 pb-5">
           <h1 className='text-2xl lg:text-3xl text-indigo-700'>Dashboard</h1>
           {/* Filter */}
-          { isFiltering ? <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3 w-full lg:w-auto">
+          {isFiltering ? <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3 w-full lg:w-auto">
             {/* Category */}
             <select onChange={handleSelectFiltering} name='category' className='w-full py-3 px-6 shadow-md cursor-pointer bg-white hover:bg-indigo-400 hover:text-white text-indigo-400 border-[1px] border-indigo-400 rounded-3xl  text-sm lg:text-base transition-all'>
               <option value="work">Work</option>
-              <option value="personal ">Personal</option>
-              <option value="others ">Others</option>
+              <option value="personal">Personal</option>
+              <option value="others">Others</option>
             </select>
             {/* Category */}
             {/* Priority */}
