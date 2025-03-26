@@ -10,6 +10,7 @@ import Spinner from './Components/Spinner';
 import Alert from './Components/Alert';
 import Confirm from './Components/Confirm';
 
+console.log(process.env.REACT_APP_API_URL)
 function App() {
   return (
     <ContextState>
