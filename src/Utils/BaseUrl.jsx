@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-    baseURL: `${process.env.REACT_APP_API_URL}/api`,
+    baseURL: `https://task-manager-backend-37ot.onrender.com/api`,
     headers: {
         'Content-Type' : 'application/json',
     }
