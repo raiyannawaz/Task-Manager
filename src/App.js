@@ -19,11 +19,11 @@ function App() {
         <Alert/>
         <Confirm/>
         <Routes>
-          <Route path='/sign-in' element={<SignIn />} />
-          <Route path='/sign-up' element={<Signup />} />
+          <Route path='/sign-in' element={<SignIn/>} />
+          <Route path='/sign-up' element={<Signup/>} />
           <Route path='/' element={<Navigate to={'/dashboard'}/>}/>
           <Route element={<ProtectedRoute />}>
-            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/dashboard' element={<Dashboard/>} />
           </Route>
         </Routes>
       </Router>
