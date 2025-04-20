@@ -94,7 +94,7 @@ export default function Dashboard() {
         <TaskAction />
         {/* Task Action */}
         {/* Tasks */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full mx-auto pb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full mx-auto pb-7">
           {filteredTasks.length > 0 ? filteredTasks.map(task => {
             return <Card task={task} key={task._id} />
           }) : <h2 className='text-xl lg:text-2xl'>No Tasks Found</h2>}
