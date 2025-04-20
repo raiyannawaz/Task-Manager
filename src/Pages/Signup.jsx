@@ -4,7 +4,6 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup'
 import { useContext, useState } from 'react';
 import Context from '../ContextAPI/Context';
-import { signUp } from '../Utils/BaseUrl'
 
 export default function Signup() {
 
@@ -31,11 +30,19 @@ export default function Signup() {
   // HANDLE SIGNUP 
   const handleSignUp = async (payload) => {
     try {
+      // API CALLING 
+      let response = await fetch(`${process.env.REACT_APP_API_URL}/auth/sign-up`, {
+        method: 'POST',
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      // API CALLING 
 
-      let response = await signUp(payload)
-      let { token, message } = response.data
+      let { token, message } = await response.json()
 
-      if (response.status === 200) {
+      if (response.status === 200 && response.ok) {
         sessionStorage.setItem('token', token)
         setIsLoading(false)
         
@@ -101,7 +108,7 @@ export default function Signup() {
 
               {/* ALERT MESSAGE */}
               {errorMessage ? <p className='text-red-500 text-sm lg:text-base mb-4'>{errorMessage}</p> :
-                <p className='text-sm lg:text-base mb-4'>Already have an account? <NavLink className='text-indigo-700' to={'/log-in'}>Log In</NavLink></p>
+                <p className='text-sm lg:text-base mb-4'>Already have an account? <NavLink className='text-indigo-700' to={'/sign-in'}>Log In</NavLink></p>
               }
               {/* ALERT MESSAGE */}
 

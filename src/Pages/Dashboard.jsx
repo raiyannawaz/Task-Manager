@@ -29,7 +29,12 @@ export default function Dashboard() {
     const newObj = { ...selectFilter, [name]: value };
 
     let newTasks = tasks.filter(task=>{
-      return Object.keys(newObj).every(key => task[key]===newObj[key])
+      for(let key in newObj){
+        if(task[key]!==newObj[key]){
+          return false
+        }
+      }
+      return true
     })
 
     setSelectFilter({ ...selectFilter, [name]: value })

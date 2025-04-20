@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import Context from '../ContextAPI/Context'
 import * as Yup from 'yup';
 import { Modal, Box } from '@mui/material';
-import { fetchData, postData, putData } from '../Utils/BaseUrl';
 
 const TaskAction = () => {
 
@@ -76,10 +75,20 @@ const TaskAction = () => {
 
         if (!taskId) {
             try {
-                let response = await postData('/task/create-task', taskDetails)
-                let { message } = response.data
+                // API CALLING
+                let response = await fetch(`${process.env.REACT_APP_API_URL}/task/create-task`,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        Authorization: sessionStorage.getItem('token')
+                    },
+                    body: JSON.stringify(taskDetails)
+                })
+                // API CALLING
+                
+                let { message } = await response.json()
 
-                if (response.status === 200) {
+                if (response.status === 200 && response.ok) {
                     showAlerts({ isShown: true, mode: 'success', message })
                     setTaskDetails({ title: '', description: '', category: 'work', priority: 'low' })
                     setIsModal(false)
@@ -98,10 +107,20 @@ const TaskAction = () => {
         }
         else {
             try {
-                let response = await putData(`/task/update-task/${taskId}`, taskDetails)
-                let { message } = response.data
+                // API CALLING 
+                let response = await fetch(`${process.env.REACT_APP_API_URL}/task/update-task/${taskId}`,{
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        Authorization : sessionStorage.getItem('token')
+                    },
+                    body: JSON.stringify(taskDetails)
+                })
+                // API CALLING 
 
-                if (response.status === 200) {
+                let { message } = await response.json()
+
+                if (response.status === 200 && response.ok) {
                     setTaskDetails({ title: '', description: '', category: 'work', priority: 'low', status: 'pending' })
                     showAlerts({ isShown: true, mode: 'success', message })
                     setIsLoading(false)
@@ -128,19 +147,26 @@ const TaskAction = () => {
         setIsLoading(true)
 
         try {
-            let response = await fetchData(`/task/get-task/${taskId}`)
+            // API CALLING 
+            let response = await fetch(`${process.env.REACT_APP_API_URL}/task/get-task/${taskId}`,{
+                method: 'GET',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    Authorization : sessionStorage.getItem('token')
+                }
+            })
+            // API CALLING 
 
-            if (response.status === 200) {
-                let { title, description, category, priority, status } = response.data
+            if (response.status === 200 && response.ok) {
+                let { title, description, category, priority, status } = await response.json()
                 setTaskDetails({ title, description, category, priority, status })
                 setIsLoading(false)
             }
             else {
-                let { message } = response.data
+                let { message } = await response.json()
                 showAlerts({ isShown: false, mode: 'danger', message })
                 setIsLoading(false)
             }
-
         }
         catch (err) {
             showAlerts({ isShown: false, mode: 'danger', message: 'Uncaught error' })

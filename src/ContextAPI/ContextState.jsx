@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Context from './Context'
-import { fetchData } from '../Utils/BaseUrl'
 
 export default function ContextState({children}) {
 
@@ -40,7 +39,7 @@ export default function ContextState({children}) {
       setFilteredTasks(tasks)
     }
     else{
-      let filteredTasks = tasks.filter(task=>task.title.includes(value))
+      let filteredTasks = tasks.filter(task=>task.title.toLowerCase().includes(value.toLowerCase()))
       setFilteredTasks(filteredTasks)
     }
   }
@@ -49,16 +48,26 @@ export default function ContextState({children}) {
     const getTasks = async () => {
       setIsLoading(true)
       try {
+
+        // API CALLING 
+        let response = await fetch(`${process.env.REACT_APP_API_URL}/task/get-tasks`,{
+          method: 'GET',
+          headers: {
+            'Content-Type' : 'application/json',
+            Authorization: sessionStorage.getItem('token')
+          }
+        })
+        // API CALLING 
+
+        let jsData = await response.json()
   
-        let response = await fetchData('/task/get-tasks')
-  
-        if (response.status === 200) {
+        if (response.status === 200 && response.ok) {
           setIsLoading(false)
-          setTasks(response.data)
-          setFilteredTasks(response.data)
+          setTasks(jsData)
+          setFilteredTasks(jsData)
         }
         else {
-          let { message } = response.data;
+          let { message } = jsData;
           setIsLoading(false)
           showAlerts({ isShown: true, color: 'red', message })
         }

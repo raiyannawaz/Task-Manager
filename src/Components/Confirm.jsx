@@ -1,6 +1,5 @@
 import { useContext } from "react"
 import Context from "../ContextAPI/Context"
-import { deleteData } from "../Utils/BaseUrl"
 
 const Confirm = () => {
 
@@ -14,9 +13,20 @@ const Confirm = () => {
     const handleConfirm = async () => {
         setIsLoading(true)
         try {
-            let response = await deleteData(`/task/delete-task/${taskId}`)
-            let { message } = response.data;
-            if (response.status === 200) {
+
+            // API CALLING 
+            let response = await fetch(`${process.env.REACT_APP_API_URL}/task/delete-task/${taskId}`,{
+                method: 'DELETE',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    Authorization: sessionStorage.getItem('token')
+                }
+            })
+            // API CALLING 
+
+            let { message } = await response.json();
+            
+            if (response.status === 200 && response.ok) {
                 setIsLoading(false)
 
                 let newTasks = await tasks.filter(task=>task._id !== taskId)
@@ -31,7 +41,6 @@ const Confirm = () => {
                 setIsLoading(false)
                 setTaskId(null)
                 showAlerts({ isShown: true, mode: 'danger', message })
-                setConfirm(false)
             }
         }
         catch (err) {

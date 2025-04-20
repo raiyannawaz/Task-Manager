@@ -12,17 +12,46 @@ export default function Navbar() {
   let location = useLocation()
   let navigate = useNavigate()
 
-  let { setTasks, searchFilter, handleSearchFilter } = useContext(Context)
+  let { setTasks, setIsLoading, showAlerts, searchFilter, handleSearchFilter } = useContext(Context)
 
-  const [ isToggleShown, setIsToggleShown ] = useState(false)
+  const [isToggleShown, setIsToggleShown] = useState(false)
 
-  const handleLogOut = () =>{
-    sessionStorage.clear()
-    setTasks([])
-    navigate('/log-in')
+  const handleLogOut = async () => {
+
+    try {
+
+      // API CALLING
+      let response = await fetch(`${process.env.REACT_APP_API_URL}/auth/sign-out`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: sessionStorage.getItem('token')
+        }
+      })
+      // API CALLING
+
+      let { message } = await response.json()
+
+      if (response.status === 200 && response.ok) {
+        setIsLoading(false)
+        sessionStorage.clear()
+        setTasks([])
+        navigate('/sign-in')
+        showAlerts({ isShown: true, mode: 'danger', message })
+      }
+      else {
+        setIsLoading(false)
+        showAlerts({ isShown: true, mode: 'danger', message })
+      }
+    }
+    catch (err) {
+      setIsLoading(false)
+      showAlerts({ isShown: true, mode: 'danger', message: 'Uncaught error' })
+    }
+
   }
 
-  const handleToggle = () =>{
+  const handleToggle = () => {
     setIsToggleShown(!isToggleShown)
   }
 
@@ -32,15 +61,15 @@ export default function Navbar() {
       {/* LEFT NAV */}
       <div className="left-nav flex justify-between lg:justify-center items-center w-full lg:w-1/5 h-16 px-3">
         <h1 className='text-2xl lg:text-3xl text-indigo-50'>Task Manager</h1>
-        { isMobile && <IconButton sx={{color: 'white'}} onClick={handleToggle}>
-          <Menu fontSize='large'/>
-        </IconButton> }
+        {isMobile && <IconButton sx={{ color: 'white' }} onClick={handleToggle}>
+          <Menu fontSize='large' />
+        </IconButton>}
       </div>
       {/* LEFT NAV */}
       <div className={`${isMobile && !isToggleShown ? 'hidden' : !isMobile && isToggleShown ? '' : ''} search w-full lg:w-3/5 flex h-full justify-center lg:justify-start items-center`}>
         {
           location.pathname === '/dashboard' &&
-          <input type="text" value={searchFilter} onChange={handleSearchFilter} className='flex items-center py-2 lg:py-0 shadow-md px-3 lg:px-4 w-2/3 lg:w-1/3 h-2/4 text-sm lg:text-base outline-none border-indigo-300 border rounded-full' placeholder='Search'/>
+          <input type="text" value={searchFilter} onChange={handleSearchFilter} className='flex items-center py-2 lg:py-0 shadow-md px-3 lg:px-4 w-2/3 lg:w-1/3 h-2/4 text-sm lg:text-base outline-none border-indigo-300 border rounded-full' placeholder='Search' />
         }
       </div>
       {/* RIGHT NAV */}
@@ -51,10 +80,10 @@ export default function Navbar() {
               <NavLink className={` text-indigo-50 text-xl lg:text-indigo-300 lg:hover:text-indigo-50`}>Logout</NavLink>
             </li>
           </ul> :
-          <ul className={`flex flex-col lg:flex-row justify-evenly space-x-3 lg:space-x-5 pr-2 lg:pr-0 ${isToggleShown ? 'h-24' : 'h-0'} lg:h-auto`}>
+          <ul className={`flex flex-col lg:flex-row justify-evenly space-x-3 lg:space-x-0 pr-2 lg:pr-0 ${isToggleShown ? 'h-24' : 'h-0'} lg:h-auto`}>
 
             <li>
-              <NavLink to={'/log-in'} className={`ps-6 lg:ps-0 text-indigo-50 text-xl ${location.pathname === '/log-in' ? 'lg:text-indigo-50' : 'lg:text-indigo-300 hover:lg:text-indigo-50'}`}>Log In</NavLink>
+              <NavLink to={'/sign-in'} className={`ps-6 lg:ps-0 text-indigo-50 text-xl ${location.pathname === '/sign-in' ? 'lg:text-indigo-50' : 'lg:text-indigo-300 hover:lg:text-indigo-50'}`}>Sign In</NavLink>
             </li>
 
             <li>
