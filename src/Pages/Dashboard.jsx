@@ -3,11 +3,14 @@ import Context from '../ContextAPI/Context'
 import { FilterAlt } from '@mui/icons-material'
 import Card from '../Components/Card'
 import TaskAction from '../Components/TaskAction'
+import PieChart from '../Components/PieChart'
 
 export default function Dashboard() {
 
   // States 
-  let { tasks, filteredTasks, setSearchFilter, isFiltering, setIsFiltering, setFilteredTasks, setIsModal, getTasks, selectFilter, setSelectFilter } = useContext(Context)
+  let { tasks, filteredTasks, setSearchFilter, isFiltering, setIsFiltering, setFilteredTasks,
+    setIsModal, getTasks, selectFilter, setSelectFilter, pieChartLabel, setPieChartLabel,
+    pieChartData, handlePieChartData } = useContext(Context)
   // States 
 
   // Handle Add
@@ -21,6 +24,7 @@ export default function Dashboard() {
     setSearchFilter('')
     setSelectFilter({})
     setIsFiltering(!isFiltering)
+    handlePieChartData(tasks, pieChartLabel)
   }
 
   const handleSelectFiltering = (event) => {
@@ -28,9 +32,9 @@ export default function Dashboard() {
     let { name, value } = event.target
     const newObj = { ...selectFilter, [name]: value };
 
-    let newTasks = tasks.filter(task=>{
-      for(let key in newObj){
-        if(task[key]!==newObj[key]){
+    let newTasks = tasks.filter(task => {
+      for (let key in newObj) {
+        if (task[key] !== newObj[key]) {
           return false
         }
       }
@@ -39,7 +43,14 @@ export default function Dashboard() {
 
     setSelectFilter({ ...selectFilter, [name]: value })
     setFilteredTasks(newTasks)
+    handlePieChartData(newTasks, pieChartLabel)
 
+  }
+
+  const handlePieChartLabel = (event) => {
+    let { value } = event.target
+    setPieChartLabel(value)
+    handlePieChartData(filteredTasks, value)
   }
 
   // Use Effect 
@@ -51,9 +62,9 @@ export default function Dashboard() {
 
   return (
     // DASHBOARD
-    <div className='dashboard-container h-full w-full'>
+    <div className='dashboard-container flex h-full w-10/12 lg:w-11/12 mx-auto space-x-5'>
       {/* CONTENT AREA */}
-      <div className="content w-10/12 mx-auto">
+      <div className="content w-full lg:w-3/4">
         {/* Top Header */}
         <div className="flex flex-col space-y-3 lg:space-y-0 lg:flex-row justify-between items-center pt-7 pb-5">
           <h1 className='text-2xl lg:text-3xl text-indigo-700'>Dashboard</h1>
@@ -92,6 +103,16 @@ export default function Dashboard() {
         {/* Top Header */}
         {/* Task Action */}
         <TaskAction />
+        {/* Pie Chart */}
+        <div className="block lg:hidden pie-chart w-full text-center mb-1">
+          <select value={pieChartLabel} onChange={handlePieChartLabel} className='w-auto my-2 mx-auto py-3 px-6 shadow-md cursor-pointer bg-white hover:bg-indigo-400 hover:text-white text-indigo-400 border-[1px] border-indigo-400 rounded-3xl  text-sm lg:text-base transition-all'>
+            <option value="category">Category</option>
+            <option value="status">Status</option>
+            <option value="priority">Priority</option>
+          </select>
+          <PieChart pieChartLabel={pieChartLabel} pieChartData={pieChartData} />
+        </div>
+        {/* Pie Chart */}
         {/* Task Action */}
         {/* Tasks */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full mx-auto pb-7">
@@ -101,6 +122,16 @@ export default function Dashboard() {
           {/* Tasks */}
         </div>
       </div>
+      {/* Pie Chart */}
+      <div className="hidden lg:block pie-chart w-1/4 text-center">
+        <select value={pieChartLabel} onChange={handlePieChartLabel} className='w-auto mt-7 mb-4 mx-auto py-3 px-6 shadow-md cursor-pointer bg-white hover:bg-indigo-400 hover:text-white text-indigo-400 border-[1px] border-indigo-400 rounded-3xl  text-sm lg:text-base transition-all'>
+          <option value="category">Category</option>
+          <option value="status">Status</option>
+          <option value="priority">Priority</option>
+        </select>
+        <PieChart pieChartLabel={pieChartLabel} pieChartData={pieChartData} />
+      </div>
+      {/* Pie Chart */}
       {/* CONTENT AREA */}
     </div>
     // DASHBOARD
