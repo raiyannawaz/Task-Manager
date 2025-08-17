@@ -14,7 +14,7 @@ function App() {
   return (
     <ContextState>
       <Router>
-        <Navbar />
+        <Navbar/>
         <Spinner/>
         <Alert/>
         <Confirm/>
