@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import Context from '../ContextAPI/Context'
 import { FilterAlt } from '@mui/icons-material'
 import Card from '../Components/Card'
@@ -9,7 +9,7 @@ export default function Dashboard() {
 
   // States 
   let { tasks, filteredTasks, setSearchFilter, isFiltering, setIsFiltering, setFilteredTasks,
-    setIsModal, getTasks, selectFilter, setSelectFilter, pieChartLabel, setPieChartLabel,
+    setIsModal, selectFilter, setSelectFilter, pieChartLabel, setPieChartLabel,
     pieChartData, handlePieChartData } = useContext(Context)
   // States 
 
@@ -52,13 +52,6 @@ export default function Dashboard() {
     setPieChartLabel(value)
     handlePieChartData(filteredTasks, value)
   }
-
-  // Use Effect 
-  let token = sessionStorage.getItem('token')
-  useEffect(() => {
-    getTasks()
-  }, [token])
-  // Use Effect
 
   return (
     // DASHBOARD
@@ -105,11 +98,11 @@ export default function Dashboard() {
         <TaskAction />
         {/* Pie Chart */}
         <div className="block lg:hidden pie-chart w-full text-center mb-1">
-          <select value={pieChartLabel} onChange={handlePieChartLabel} className='w-auto my-2 mx-auto py-3 px-6 shadow-md cursor-pointer bg-white hover:bg-indigo-400 hover:text-white text-indigo-400 border-[1px] border-indigo-400 rounded-3xl  text-sm lg:text-base transition-all'>
+          {filteredTasks.length > 0 && <select value={pieChartLabel} onChange={handlePieChartLabel} className='w-auto my-2 mx-auto py-3 px-6 shadow-md cursor-pointer bg-white hover:bg-indigo-400 hover:text-white text-indigo-400 border-[1px] border-indigo-400 rounded-3xl  text-sm lg:text-base transition-all'>
             <option value="category">Category</option>
             <option value="status">Status</option>
             <option value="priority">Priority</option>
-          </select>
+          </select>}
           <PieChart pieChartLabel={pieChartLabel} pieChartData={pieChartData} />
         </div>
         {/* Pie Chart */}
@@ -124,11 +117,11 @@ export default function Dashboard() {
       </div>
       {/* Pie Chart */}
       <div className="hidden lg:block pie-chart w-1/4 text-center">
-        <select value={pieChartLabel} onChange={handlePieChartLabel} className='w-auto mt-7 mb-4 mx-auto py-3 px-6 shadow-md cursor-pointer bg-white hover:bg-indigo-400 hover:text-white text-indigo-400 border-[1px] border-indigo-400 rounded-3xl  text-sm lg:text-base transition-all'>
+        {filteredTasks.length > 0 && <select value={pieChartLabel} onChange={handlePieChartLabel} className='w-auto mt-7 mb-4 mx-auto py-3 px-6 shadow-md cursor-pointer bg-white hover:bg-indigo-400 hover:text-white text-indigo-400 border-[1px] border-indigo-400 rounded-3xl  text-sm lg:text-base transition-all'>
           <option value="category">Category</option>
           <option value="status">Status</option>
           <option value="priority">Priority</option>
-        </select>
+        </select>}
         <PieChart pieChartLabel={pieChartLabel} pieChartData={pieChartData} />
       </div>
       {/* Pie Chart */}

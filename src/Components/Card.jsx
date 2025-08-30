@@ -7,11 +7,11 @@ const Card = (props) => {
 
     let { setTaskId, setIsModal, setConfirm } = useContext(Context)
 
-    let { title, created_at, category, priority, status, _id } = props.task
+    let { title, createdAt, category, priority, status, _id } = props.task
 
-    let createdDate = new Date(created_at).toLocaleDateString()
+    let createdDate = new Date(createdAt).toLocaleDateString()
 
-    // let updatedDate = updated_at ? new Date(updated_at).toLocaleString() : ''
+    // let updatedDate = updatedAt ? new Date(updatedAt).toLocaleString() : ''
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);

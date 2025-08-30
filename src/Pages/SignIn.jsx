@@ -23,7 +23,7 @@ export default function SignIn() {
   })
   // Validate Schema 
 
-  const handleLogin = async (payload) => {
+  const handleSignIn = async (payload) => {
 
     try {
       // API CALLING 
@@ -88,7 +88,7 @@ export default function SignIn() {
           onSubmit={(value, { setSubmitting }) => {
             try {
               setIsLoading(true)
-              handleLogin(value)
+              handleSignIn(value)
             }
             catch (err) {
               setSubmitting(false);

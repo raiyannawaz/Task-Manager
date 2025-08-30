@@ -9,6 +9,8 @@ import ProtectedRoute from './Components/ProtectedRoute';
 import Spinner from './Components/Spinner';
 import Alert from './Components/Alert';
 import Confirm from './Components/Confirm';
+import Dropdown from './Components/Dropdown';
+import Profile from './Pages/Profile';
 
 function App() {
   return (
@@ -18,12 +20,14 @@ function App() {
         <Spinner/>
         <Alert/>
         <Confirm/>
+        <Dropdown/>
         <Routes>
           <Route path='/sign-in' element={<SignIn/>} />
           <Route path='/sign-up' element={<Signup/>} />
           <Route path='/' element={<Navigate to={'/dashboard'}/>}/>
           <Route element={<ProtectedRoute />}>
             <Route path='/dashboard' element={<Dashboard/>} />
+            <Route path='/profile' element={<Profile/>}/>
           </Route>
         </Routes>
       </Router>

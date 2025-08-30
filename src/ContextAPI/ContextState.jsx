@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Context from './Context'
 
 export default function ContextState({ children }) {
+
+  const [user, setUser] = useState(null)
 
   const [tasks, setTasks] = useState([])
 
@@ -16,6 +18,8 @@ export default function ContextState({ children }) {
   const [confirm, setConfirm] = useState(false)
 
   const [isFiltering, setIsFiltering] = useState(false)
+
+  const [isDropdown, setIsDropdown] = useState(false)
 
   const showAlerts = ({ isShown, mode, message }) => {
     setAlerts({ isShown, mode, message })
@@ -42,18 +46,18 @@ export default function ContextState({ children }) {
 
     for (let i = 0; i < currTasks.length; i++) {
       let currTask = currTasks[i]
-      for(let key in currTask){
-        if(key === label){
-          if(!newPieChartData.labels.includes(currTask[key])){
+      for (let key in currTask) {
+        if (key === label) {
+          if (!newPieChartData.labels.includes(currTask[key])) {
             newPieChartData = {
               ...newPieChartData,
               labels: [...newPieChartData.labels, currTask[key]],
               data: [...newPieChartData.data, 1]
             }
           }
-          else{
+          else {
             let index = newPieChartData.labels.indexOf(currTask[key])
-            newPieChartData.data[index] = newPieChartData.data[index]+1
+            newPieChartData.data[index] = newPieChartData.data[index] + 1
           }
         }
       }
@@ -114,12 +118,43 @@ export default function ContextState({ children }) {
   }
   // Get Tasks 
 
+  // Get User 
+  const getUser = async () => {
+    setIsLoading(true)
+    try {
+      let response = await fetch(`${process.env.REACT_APP_API_URL}/user/get-user`, {
+        method: 'GET',
+        headers: {
+          Authorization: sessionStorage.getItem('token'),
+          'Content-Type': 'application/json'
+        }
+      })
+
+      let jsData = await response.json()
+
+      if (response.ok && response.status === 200) {
+        setUser({ name: jsData.name, email: jsData.email, image: jsData.imageUrl })
+        showAlerts({ isShown: true, mode: 'success', message: 'User fetched' })
+        setIsLoading(false)
+      }
+      else {
+        showAlerts({ isShown: true, mode: 'danger', message: 'Uncaught error' })
+        setIsLoading(false)
+      }
+    }
+    catch (err) {
+      setIsLoading(false)
+      showAlerts({ isShown: true, color: 'red', message: 'Uncaught error' })
+    }
+  }
+  // Get User 
+
   return (
     <Context.Provider value={{
-      getTasks, isLoading, setIsLoading, alerts, showAlerts, isModal, setIsModal,
+      getTasks, isLoading, setIsLoading, alerts, showAlerts, isModal, setIsModal, user, setUser, getUser,
       taskId, setTaskId, tasks, setTasks, searchFilter, setSearchFilter, handleSearchFilter, filteredTasks,
       setFilteredTasks, confirm, setConfirm, selectFilter, isFiltering, setIsFiltering, setSelectFilter,
-      pieChartLabel, setPieChartLabel, pieChartData, setPieChartData, handlePieChartData
+      pieChartLabel, setPieChartLabel, pieChartData, setPieChartData, handlePieChartData, isDropdown, setIsDropdown
     }}>
       {children}
     </Context.Provider>

@@ -9,9 +9,9 @@ const Alert = () => {
     let { isShown, mode, message } = alerts
 
     const alertColors = {
-        success: 'bg-green-500',
-        danger: 'bg-red-500',
-        warning: 'bg-yellow-500'
+        success: 'text-green-500',
+        danger: 'text-red-500',
+        warning: 'text-yellow-500'
     }
 
     const alertIcons = {
@@ -20,7 +20,7 @@ const Alert = () => {
         warning: <PriorityHigh/>
     }
     
-    return isShown && <div className={`fixed top-10 right-9 lg:right-16 text-md ${alertColors[mode]} text-white px-5 py-3 text-md rounded shadow z-[3000]`}>
+    return isShown && <div className={`fixed shadow-md top-12 right-9 lg:right-16 text-md ${alertColors[mode]} bg-white px-5 py-3 text-md rounded shadow z-[3000]`}>
         {alertIcons[mode]} {message}
     </div>
 }
